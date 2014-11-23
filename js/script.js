@@ -106,15 +106,17 @@ function UncontrolledPlayer(x, y, w, h)
 
 UncontrolledPlayer.prototype.Draw = function()
 {
-   var curFrame;
-    if(Math.floor(time/10)%2){
-        curFrame=this.frame;
-    }
-    else{
-        curFrame=this.frame+1; 
-    } 
-    ctx.drawImage(citizenImg, this.w*curFrame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
-}
+    if(CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h, globalX, globalY, canvas.width,
+        canvas.height)){
+        var curFrame;
+        if(Math.floor(time/10)%2){
+            curFrame=this.frame;
+        }
+        else{
+            curFrame=this.frame+1; 
+        } 
+        ctx.drawImage(citizenImg, this.w*curFrame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
+}   }
 
 function Enemy(x, y, w, h)
 {
@@ -130,8 +132,16 @@ Enemy.prototype.Draw = function()
 {
     
     if(CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h, globalX, globalY, canvas.width,
-        canvas.height))
-        ctx.drawImage(enemyImg, this.x-this.w/2 - globalX, this.y - this.h/2 - globalY);
+        canvas.height)){
+        var curFrame;
+        if(Math.floor(time/10)%2){
+            curFrame=this.frame;
+        }
+        else{
+            curFrame=this.frame+1; 
+        } 
+        ctx.drawImage(enemyImg, this.w*curFrame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
+    }
 }
 
 function drawScene(){
