@@ -353,7 +353,7 @@ $(function(){
                 if(snapshot.val().state==2)
                     delete uncontrolledPlayers[snapshot.key()];
                 else
-                    delete uncontrolledPlayers[snapshot.key()];
+                    delete enemies[snapshot.key()];
               
             });
             // Retrieve new posts as they are added to Firebase
