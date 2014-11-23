@@ -90,7 +90,7 @@ Player.prototype.CheckCollisions = function()
                     playerImg.src='images/soldier1mainsprite.png'
                     citizenImg.src='images/usermainsprite.png'
                     enemyImg.src='images/soldier1ghostsprite.png'
-                    this.state = 2;
+                    this.state = 1;
                 }   
             }
         }
