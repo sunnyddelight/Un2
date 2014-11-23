@@ -170,7 +170,7 @@ $(function(){
         globalX = 0;
         globalY = 0;
     var playerImg= new Image();
-    playerImg.src='images/enemy.png';
+    playerImg.src='images/usersprite.png';
     playerImg.onload=function(){
         player=new Player(canvas.width /2, canvas.height/2, playerImg.width/8, playerImg.height, playerImg);
 
