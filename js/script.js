@@ -86,7 +86,7 @@ Player.prototype.CheckCollisions = function()
                     playerX=this.x;
                     playerY=this.y;
                     playerImg.src='images/soldier1mainsprite.png'
-                    citizenImg.src='images/userghostsprite.png'
+                    citizenImg.src='images/usermainsprite.png'
                     enemyImg.src='images/soldier1ghostsprite.png'
                     this.state = 2;
                 }   
