@@ -15,6 +15,7 @@ var mapW, mapH;
 var fireSet=true;
 var rocks = [];
 var rockImg;
+var walkSound, collideSound;
 
 //pass top left as (x, y)
 function CheckCollision(x1, y1, w1, h1, x2, y2, w2, h2)
@@ -83,6 +84,7 @@ Player.prototype.CheckCollisions = function()
                     enemies[ekey].x - enemies[ekey].w/2, enemies[ekey].y - enemies[ekey].h/2,
                     enemies[ekey].w, enemies[ekey].h))
                 {
+                    collideSound.play();
                     playerX=this.x;
                     playerY=this.y;
                     playerImg.src='images/soldier1mainsprite.png'
@@ -102,7 +104,10 @@ Player.prototype.CheckCollisions = function()
                 if(uncontrolledPlayers[pkey] != undefined)
                 {
                     if(CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h,         uncontrolledPlayers[pkey].x - uncontrolledPlayers[pkey].w/2, uncontrolledPlayers[pkey].y - uncontrolledPlayers[pkey].h/2, uncontrolledPlayers[pkey].w, uncontrolledPlayers[pkey].h))
+                    {
+                        collideSound.play();
                         this.points++;
+                    }
                 }
             }
         }
@@ -199,6 +204,7 @@ function drawScene(){
 
 function processPressedKeys() {
     if (pressedKeys[37] != undefined) { // 'Left' key
+            walkSound.play();
             player.frame=2;
             player.x -= stepSize;
             globalX -= stepSize;
@@ -212,6 +218,7 @@ function processPressedKeys() {
             }
     }
     else if (pressedKeys[38] != undefined) { // 'Up' key
+            walkSound.play();
             player.frame=6;
             player.y -= stepSize;
             globalY -= stepSize;
@@ -225,6 +232,7 @@ function processPressedKeys() {
             }
     }
     else if (pressedKeys[39] != undefined) { // 'Right' key
+            walkSound.play();
             player.frame=4;
             player.x += stepSize;
             globalX += stepSize;
@@ -238,6 +246,7 @@ function processPressedKeys() {
             }
     }
     else if (pressedKeys[40] != undefined) { // 'Down' key
+            walkSound.play();
             player.frame=0;
             player.y += stepSize;
             globalY += stepSize;
@@ -269,7 +278,8 @@ function processPressedKeys() {
 $(function(){
     canvas = document.getElementById('scene');
     ctx = canvas.getContext('2d');
-    
+    walkSound = new Audio("walk.wav");
+    collideSound = new Audio("collide.wav");
     backgroundImg=new Image();
     backgroundImg.src = 'images/dirt.png';
     backgroundImg.onload=function(){}
