@@ -7,7 +7,9 @@ var stepSize= 7;
 var uncontrolledPlayers = [];
 var globalX, globalY;
 var time=0;
-var playerXstart,playerYstart;
+var playerImg, soldierImg, citizenImg;
+var rootRef;
+var playerX, playerY;
 
 //pass top left as (x, y)
 function CheckCollision(x1, y1, w1, h1, x2, y2, w2, h2)
@@ -30,13 +32,12 @@ function CheckCollision(x1, y1, w1, h1, x2, y2, w2, h2)
         return false;
     return true;
 }
-function Player(x, y, w, h, image)
+function Player(x, y, w, h)
 {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
-    this.image = image;
     //true = civilian, false = soldier
     this.state = true;
     this.frame =0;
@@ -52,8 +53,8 @@ Player.prototype.Draw = function()
     else{
         curFrame=this.frame+1; 
     } 
-    ctx.drawImage(this.image, this.w*curFrame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
-    
+    ctx.drawImage(playerImg, this.w*curFrame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
+    console.log(playerImg.src," ",this.x, " ", this.y);
 }
 
 Player.prototype.CheckCollisions = function()
@@ -70,9 +71,11 @@ Player.prototype.CheckCollisions = function()
                        enemies[ekey].x - enemies[ekey].w/2, enemies[ekey].y - enemies[ekey].h/2,
                        enemies[ekey].w, enemies[ekey].h))
                        {
-                            playerXstart=this.x;
-                            playerYstart=this.y;
-                            this.image.src='images/soldiersprite.png'
+                            playerX=this.x;
+                            playerY=this.y;
+                            playerImg.src='images/soldier1mainsprite.png'
+                            citizenImg.src='images/userghostsprite.png'
+                            enemyImg.src='images/soldier1ghostsprite.png'
                             this.state = false;
                        }
                    
@@ -96,13 +99,12 @@ Player.prototype.CheckCollisions = function()
     }
 }
 
-function UncontrolledPlayer(x, y, w, h, image)
+function UncontrolledPlayer(x, y, w, h)
 {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
-    this.image = image;
     this.frame = 0;
 }
 
@@ -110,27 +112,27 @@ UncontrolledPlayer.prototype.Draw = function()
 {
     if(CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h, globalX, globalY, canvas.width,
         canvas.height))
-        ctx.drawImage(this.image, this.w*this.frame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY);
+        ctx.drawImage(citizenImg, this.w*this.frame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY);
 }
 
-function Enemy(x, y, w, h, image)
+function Enemy(x, y, w, h)
 {
     
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
-    this.image = image;
 }
 Enemy.prototype.Draw = function()
 {
     
     if(CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h, globalX, globalY, canvas.width,
         canvas.height))
-        ctx.drawImage(this.image, this.x-this.w/2 - globalX, this.y - this.h/2 - globalY);
+        ctx.drawImage(enemyImg, this.x-this.w/2 - globalX, this.y - this.h/2 - globalY);
 }
 
 function drawScene(){
+    //console.log("(",player.x,",",player.y,")");
     time++;
     updateScene();
     processPressedKeys();
@@ -157,6 +159,7 @@ function drawScene(){
 
 function updateScene(){
     // update enemies and uncontrolled players status
+    
     // send current location data to server
 }
 
@@ -198,21 +201,28 @@ $(function(){
     backgroundImg=new Image();
     backgroundImg.src = 'images/levelmap.jpg';
     backgroundImg.onload=function(){}
-        globalX = 0;
-        globalY = 0;
-    var playerImg= new Image();
-    playerImg.src='images/usersprite.png';
-    playerXstart=canvas.width /2;
-    playerYstart=canvas.height/2
-    playerImg.onload=function(){
-        player=new Player(playerXstart,playerYstart , playerImg.width/8, playerImg.height, playerImg);
+    globalX = 0;
+    globalY = 0;
+    
+    playerImg= new Image();
+    playerImg.src='images/usermainsprite.png';
+    playerX=canvas.width/2;
+    playerY=canvas.height/2;
 
+    playerImg.onload=function(){
+        player=new Player(playerX,playerY, playerImg.width/8, playerImg.height);
     }
-    var enemyImg=new Image();
-    enemyImg.src= 'images/enemy.png';
+    
+    
+    enemyImg=new Image();
+    enemyImg.src= 'images/soldier1mainsprite.png';
     enemyImg.onload=function(){}
     
-    enemies[0]=new Enemy(40, 50, 70,70, enemyImg);   
+    citizenImg=new Image();
+    citizenImg.src= 'images/userghostsprite.png';
+    citizenImg.onload=function(){}
+    
+    enemies[0]=new Enemy(40, 50, 70,70);   
     $(window).keydown(function (evt){ // onkeydown event handle
         var pk = pressedKeys[evt.keyCode];
         if (! pk) {
@@ -225,7 +235,7 @@ $(function(){
             delete pressedKeys[evt.keyCode]; // remove pressed key from array
         }
     });
-    
+    rootRef = new Firebase('https://escape-from-the-un.firebaseio.com');
     setInterval(drawScene, 30);
 
 
