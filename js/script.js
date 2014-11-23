@@ -69,6 +69,7 @@ Player.prototype.CheckCollisions = function()
                        enemies[ekey].x - enemies[ekey].w/2, enemies[ekey].y - enemies[ekey].h/2,
                        enemies[ekey].w, enemies[ekey].h))
                        {
+                            this.image.src='images/soldiersprite.png'
                            this.state = false;
                        }
                    
