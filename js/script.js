@@ -76,7 +76,7 @@ Player.prototype.Draw = function()
 
 Player.prototype.CheckCollisions = function()
 {
-    if(this.state==1)
+    if(this.state==2)
     {
         for (ekey in enemies) {
             if (enemies.hasOwnProperty(ekey)){
