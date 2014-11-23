@@ -165,7 +165,7 @@ function processPressedKeys() {
             globalX += stepSize;
         }
     }
-     else if (pressedKeys[40] != undefined) { // 'Down' key
+    else if (pressedKeys[40] != undefined) { // 'Down' key
         if (player.y + player.h / 2 < canvas.height - 10) {
             player.frame=0;
             player.y += stepSize;
