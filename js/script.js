@@ -7,6 +7,7 @@ var stepSize= 7;
 var uncontrolledPlayers = [];
 var globalX, globalY;
 var time=0;
+var playerXstart,playerYstart;
 
 //pass top left as (x, y)
 function CheckCollision(x1, y1, w1, h1, x2, y2, w2, h2)
@@ -69,8 +70,10 @@ Player.prototype.CheckCollisions = function()
                        enemies[ekey].x - enemies[ekey].w/2, enemies[ekey].y - enemies[ekey].h/2,
                        enemies[ekey].w, enemies[ekey].h))
                        {
+                            playerXstart=this.x;
+                            playerYstart=this.y;
                             this.image.src='images/soldiersprite.png'
-                           this.state = false;
+                            this.state = false;
                        }
                    
                }
@@ -199,8 +202,10 @@ $(function(){
         globalY = 0;
     var playerImg= new Image();
     playerImg.src='images/usersprite.png';
+    playerXstart=canvas.width /2;
+    playerYstart=canvas.height/2
     playerImg.onload=function(){
-        player=new Player(canvas.width /2, canvas.height/2, playerImg.width/8, playerImg.height, playerImg);
+        player=new Player(playerXstart,playerYstart , playerImg.width/8, playerImg.height, playerImg);
 
     }
     var enemyImg=new Image();
