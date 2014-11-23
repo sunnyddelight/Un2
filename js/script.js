@@ -228,7 +228,6 @@ $(function(){
 
                 var snapKey=dataSnapshot.key();
                 if(snapKey!=userID){
-                    console.log(enemies);
                     if(enemies.hasOwnProperty(snapKey)){
                         if(dataSnapshot.val().state==2){
                             delete enemies[snapKey];
@@ -260,18 +259,19 @@ $(function(){
                 }
             });
             rootRef.on('child_added', function(dataSnapshot) {
-                
-                var snapKey=dataSnapshot.key();
-                console.log(dataSnapshot.val().state);
-                if(dataSnapshot.val().state==2){
-                    enemies[snapKey]=new Enemy(dataSnapshot.val().x_val, dataSnapshot.val().y_val, dataSnapshot.val().w, dataSnapshot.val().h);
-                    enemies[snapKey].state=dataSnapshot.val().state;
-                    enemies[snapKey].points=dataSnapshot.val().points;
-                }
-                else if(dataSnapshot.val().state==1){
-                    uncontrolledPlayers[snapKey]=new UncontrolledPlayer(dataSnapshot.val().x_val, dataSnapshot.val().y_val, dataSnapshot.val().w, dataSnapshot.val().h);
-                    uncontrolledPlayers[snapKey].state=dataSnapshot.val().state;
-                    uncontrolledPlayers[snapKey].points=dataSnapshot.val().points;
+                if(snapKey!=userID){
+                    var snapKey=dataSnapshot.key();
+                    console.log(dataSnapshot.val().state);
+                    if(dataSnapshot.val().state==2){
+                        enemies[snapKey]=new Enemy(dataSnapshot.val().x_val, dataSnapshot.val().y_val, dataSnapshot.val().w, dataSnapshot.val().h);
+                        enemies[snapKey].state=dataSnapshot.val().state;
+                        enemies[snapKey].points=dataSnapshot.val().points;
+                    }
+                    else if(dataSnapshot.val().state==1){
+                        uncontrolledPlayers[snapKey]=new UncontrolledPlayer(dataSnapshot.val().x_val, dataSnapshot.val().y_val, dataSnapshot.val().w, dataSnapshot.val().h);
+                        uncontrolledPlayers[snapKey].state=dataSnapshot.val().state;
+                        uncontrolledPlayers[snapKey].points=dataSnapshot.val().points;
+                    }
                 }
                 
             });
