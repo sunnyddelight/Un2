@@ -173,6 +173,7 @@ $(function(){
     playerImg.src='images/enemy.png';
     playerImg.onload=function(){
         player=new Player(canvas.width /2, canvas.height/2, playerImg.width/8, playerImg.height, playerImg);
+
     }
     var enemyImg=new Image();
     enemyImg.src= 'images/enemy.png';
