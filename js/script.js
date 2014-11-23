@@ -90,21 +90,25 @@ function processPressedKeys() {
     if (pressedKeys[37] != undefined) { // 'Left' key
         if (player.x - player.w / 2 > 10) {
             player.x -= stepSize;
+            globalX -= stepSize;
         }
     }
     else if (pressedKeys[38] != undefined) { // 'Up' key
         if (player.y - player.h / 2 > 10) {
             player.y -= stepSize;
+            globalY -= stepSize;
         }
     }
     else if (pressedKeys[39] != undefined) { // 'Right' key
         if (player.x + player.w / 2 < canvas.width - 10) {
             player.x += stepSize;
+            globalX += stepSize;
         }
     }
      else if (pressedKeys[40] != undefined) { // 'Down' key
         if (player.y + player.h / 2 < canvas.height - 10) {
             player.y += stepSize;
+            globalY += stepSize;
         }
     }
 }
