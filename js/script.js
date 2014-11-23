@@ -39,6 +39,7 @@ function Player(x, y, w, h, image)
     //true = civilian, false = soldier
     this.state = true;
     this.frame =0;
+    this.points = 0;
 }
 Player.prototype.Draw = function()
 {
@@ -69,11 +70,24 @@ Player.prototype.CheckCollisions = function()
                        enemies[ekey].w, enemies[ekey].h))
                        {
                            this.state = false;
-                           enemies[ekey].points++;
                        }
                    
                }
            }
+        }
+    }
+    else
+    {
+        if(uncontrolledPlayers.length > 0)
+        {
+            for(var pkey in uncontrolledPlayers)
+            {
+                if(uncontrolledPlayers[pkey] != undefined)
+                {
+                    if(CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h,         uncontrolledPlayers[pkey].x - uncontrolledPlayers[pkey].w/2, uncontrolledPlayers[pkey].y - uncontrolledPlayers[pkey].h/2, uncontrolledPlayers[pkey].w, uncontrolledPlayers[pkey].h))
+                        this.points++;
+                }
+            }
         }
     }
 }
@@ -103,7 +117,6 @@ function Enemy(x, y, w, h, image)
     this.w = w;
     this.h = h;
     this.image = image;
-    this.points = 0;
 }
 Enemy.prototype.Draw = function()
 {
@@ -211,4 +224,3 @@ $(function(){
 
 
 });
-
