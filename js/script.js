@@ -2,12 +2,32 @@ var canvas, ctx;
 var pressedKeys = [];
 var backgroundImg;
 var player=null;
-var playerWidth=100;
-var playerHeight=100;
 var enemies = [];
 var stepSize= 7;
 var uncontrolledPlayers = [];
 var globalX, globalY;
+
+//pass top left as (x, y)
+function CheckCollision(x1, y1, w1, h1, x2, y2, w2, h2)
+{
+    var left1 = x1;
+    var right1 = x1 + w1;
+    var top1 = y1;
+    var bottom1 = y1 + h1;
+    var left2 = x2;
+    var right2 = x2 + w2;
+    var top2 = y2;
+    var bottom2 = y2 + h2;
+    if(bottom1 <= top2)
+        return false;
+    if(top1 >= bottom2)
+        return false;
+    if(right1 <= left2)
+        return false;
+    if(left1 >= right2)
+        return false;
+    return true;
+}
 function Player(x, y, w, h, image)
 {
     this.x = x;
@@ -15,32 +35,37 @@ function Player(x, y, w, h, image)
     this.w = w;
     this.h = h;
     this.image = image;
+    //true = civilian, false = soldier
     this.state = true;
+    this.frame =0;
 }
 Player.prototype.Draw = function()
 {
-    ctx.drawImage(this.image, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY);
+//ctx.drawImage(this.image,this.x - this.w/2 - globalX, this.y - this.h/2 - globalY);
+    ctx.drawImage(this.image, this.w*this.frame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
 }
 
 Player.prototype.CheckCollisions = function()
 {
-    if(enemies.length > 0)
+    if(this.state)
     {
-       for(var ekey in enemies)
-       {
-           if(enemies[ekey] != undefined)
+        if(enemies.length > 0)
+        {
+           for(var ekey in enemies)
            {
-               var leftP = this.x - this.w/2;
-               var rightP = this.x + this.w/2;
-               var topP = this.y - this.h/2;
-               var bottomP = this.y + this.h/2;
-               var leftE = enemies[ekey].x - enemies[ekey].w/2;
-               var rightE = enemies[ekey].x + enemies[ekey].w/2;
-               var topE = enemies[ekey].y - enemies[ekey].h/2;
-               var bottomE = enemies[ekey].y + enemies[ekey].h/2;
-               
+               if(enemies[ekey] != undefined)
+               {
+                   if(CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h,
+                       enemies[ekey].x - enemies[ekey].w/2, enemies[ekey].y - enemies[ekey].h/2,
+                       enemies[ekey].w, enemies[ekey].h))
+                       {
+                           this.state = false;
+                           enemies[ekey].points++;
+                       }
+                   
+               }
            }
-       }
+        }
     }
 }
 
@@ -51,11 +76,16 @@ function UncontrolledPlayer(x, y, w, h, image)
     this.w = w;
     this.h = h;
     this.image = image;
+    this.frame = 0;
 }
 
 UncontrolledPlayer.prototype.Draw = function()
 {
+    if(!CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h, globalX, globalY, canvas.width,
+        canvas.height))
+        ctx.drawImage(this.image, this.w*this.frame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY);
 }
+
 function Enemy(x, y, w, h, image)
 {
     
@@ -64,26 +94,43 @@ function Enemy(x, y, w, h, image)
     this.w = w;
     this.h = h;
     this.image = image;
+    this.points = 0;
 }
 Enemy.prototype.Draw = function()
 {
     
-    ctx.drawImage(this.image, this.x-this.w/2, this.y);
+    if(!CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h, globalX, globalY, canvas.width,
+        canvas.height))
+        ctx.drawImage(this.image, this.x-this.w/2 - globalX, this.y - this.h/2 - globalY);
 }
 
 function drawScene(){
+    updateScene();
     processPressedKeys();
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.drawImage(backgroundImg, 0, 0, 700, 700, 0, 0, 700, 700);
+    ctx.drawImage(backgroundImg, globalX, globalY, ctx.canvas.width, ctx.canvas.width, 0, 0, 700, 700);
     player.Draw();
     if (enemies.length > 0) {
-            for (var ekey in enemies) {
-                if (enemies[ekey] != undefined) {
-                    enemeis[ekey].Draw();
-                }
+        for (var ekey in enemies) {
+            if (enemies[ekey] != undefined) {
+                enemeis[ekey].Draw();
             }
         }
+    }
+    /*if (uncontrolledPlayers.length > 0) {
+        for (var ekey in uncontrolledPlayers) {
+            if (uncontrolledPlayers[ekey] != undefined) {
+                uncontrolledPlayers[ekey].Draw();
+            }
+        }
+    }*/
+    player.CheckCollisions();
     
+}
+
+function updateScene(){
+    // update enemies and uncontrolled players status
+    // send current location data to server
 }
 
 function processPressedKeys() {
@@ -118,16 +165,20 @@ $(function(){
     ctx = canvas.getContext('2d');
     
     backgroundImg=new Image();
-    //backgroundImg.src = 'images/dirt.png';
+    backgroundImg.src = 'images/levelmap.jpg';
     backgroundImg.onload=function(){}
-    globalX = 0;
-globalY = 0;
+        globalX = 0;
+        globalY = 0;
     var playerImg= new Image();
     playerImg.src='images/enemy.png';
     playerImg.onload=function(){
-        player=new Player(canvas.width /2, canvas.height- playerHeight-10, playerWidth, playerHeight, playerImg);
+        player=new Player(canvas.width /2, canvas.height/2, playerImg.width/8, playerImg.height, playerImg);
     }
+    var enemyImg=new Image();
+    enemyImg.src= 'images/enemy.png';
+    enemyImg.onload=function(){}
     
+    enemies[0]=new Enemy(40, 50, 70,70, enemyImg);   
     $(window).keydown(function (evt){ // onkeydown event handle
         var pk = pressedKeys[evt.keyCode];
         if (! pk) {
