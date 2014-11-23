@@ -1,28 +1,67 @@
-<!DOCTYPE html>
-<html lang="en" >
-    <head>
-        <meta charset="utf-8" />
-        <meta name="author" content="Script Tutorials" />
-        <title>Escape from the Un</title>
+<body background=" http://summemedicalclinic.com/wp-content/uploads/Gradient-Background-112.jpg" bgcolor="#333333">
 
-        <!-- add styles -->
-        <link href="css/main.css" rel="stylesheet" type="text/css" />
+	
+    <div class="container body-content">
+        
 
-        <!-- add scripts -->
-        <!--[if lt IE 9]>
-          <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
-        <script src="https://cdn.firebase.com/js/client/2.0.4/firebase.js"></script>
-        <script src="js/jquery.js"></script>
-        <script src="js/script.js"></script>
-    </head>
-    <body>
-        <header>
-            <h2>Escape from the Un</h2>
-        </header>
 
-        <div class="container">
-            <canvas style="height:800px; width:600px;" id="scene" width="800" height="600" tabindex="1"></canvas>
-        </div>
-    </body>
-</html>
+    <meta charset="utf-8">
+    <title>Escape from the Un</title>
+
+    <!-- add styles -->
+    <!-- add scripts -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script src="https://cdn.firebase.com/js/client/2.0.4/firebase.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/script.js"></script>
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<div style="background:transparent !important" class="jumbotron">
+    <h1>Escape from the Un</h1>
+    <p class="lead">WildHacks 2014</p>
+
+</div>
+
+<div class="row">
+    <div class = "col-md-6 style="border: 2px solid black; height: 600px">
+        <canvas id="scene" width="800" height="600" tabindex="1"></canvas>
+
+
+    </div>
+    <div class="col-md-offset-3 col-md-3">
+        <h2>INFO</h2>
+        <p>
+            "Escape from the Un" is a casual, yet serious game on the difficulties of escaping the DPRK (North Korea). This game pictures the initial opposition that a North Korean defector must face: through rough terrain, defectors must run from North Korean's military forces, and not be captured by them during their escape. In reality, North Korean military will retaliate in more ruthless ways, including gunfire.
+
+            This game only pictures the start of the road to a North Korean's escape - they must face deportation in other countries, human trafficking, and the lack of basic nourishment and shelter. Liberty in North Korea (LINK) is an organization that helps North Koreans that escape from their country, but help give passage to a free life. Through this game, we implemented a fun way to donate to this organization. It is a small way that all of us can support this cause. We also hope to spread social awareness of not only LINK's work, but the harsh realities of escaping North Korea.
+        </p>
+        <p><a class="btn btn-default" href="http://libertyinnorthkorea.org/">Learn more</a></p>
+    </div>
+
+
+    <div class=" col-md-offset-9 col-md-3">
+
+        <p><a class="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=MWE7FAXK3YW26">Donate »</a></p>
+
+
+    </div>
+
+
+
+</div>
+        <hr>
+        <footer>
+            <p>James Jia, Saad Paya, Shivam Gupta, Sunny Duan, Thomas Wu</p>
+        </footer>
+    </div>
+
+ 
+	<script src = "js/jquery1.7.js"></script>	
+	
+    <script src="js/bootstrap.min.js"></script>
+
+    
+
+
+</body>

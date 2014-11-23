@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" >
+    <head>
+        <meta charset="utf-8" />
+        <meta name="author" content="Script Tutorials" />
+        <title>Escape from the Un</title>
+
+        <!-- add styles -->
+        <link href="css/main.css" rel="stylesheet" type="text/css" />
+
+        <!-- add scripts -->
+        <!--[if lt IE 9]>
+          <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <script src="https://cdn.firebase.com/js/client/2.0.4/firebase.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/script.js"></script>
+    </head>
+    <body>
+        <header>
+            <h2>Escape from the Un</h2>
+        </header>
+
+        <div class="container">
+            <canvas style="height:800px; width:600px;" id="scene" width="800" height="600" tabindex="1"></canvas>
+        </div>
+    </body>
+</html>
