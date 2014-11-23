@@ -385,7 +385,7 @@ $(function(){
             rocks[9] = new Rock(373, 178, rockImg.width, rockImg.height);
             rocks[10] = new Rock(618, 400, rockImg.width, rockImg.height);
             rocks[11] = new Rock(156, 718, rockImg.width, rockImg.height);
-            rocks[12] = new Rock(36, 75, rockImg.width, rockImg.height);
+            rocks[12] = new Rock(36, 345, rockImg.width, rockImg.height);
             rocks[13] = new Rock(451, 966, rockImg.width, rockImg.height);
             rocks[14] = new Rock(21, 86, rockImg.width, rockImg.height);
 
