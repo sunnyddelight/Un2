@@ -181,6 +181,7 @@ function drawScene(){
     }
     for (var ekey in uncontrolledPlayers) {
         if (uncontrolledPlayers.hasOwnProperty(ekey)) {
+            console.log(uncontrolledPlayers[ekey]);
             uncontrolledPlayers[ekey].Draw();
         }
     }
@@ -247,7 +248,6 @@ function processPressedKeys() {
                 if(CheckCollision(player.x - player.w/2, player.y - player.h/2, player.w, player.h, 
                     rocks[i].x - rocks[i].w/2, rocks[i].y - rocks[i].h/2, rocks[i].w, rocks[i].h))
                     {
-                        console.log(rocks[i]);
                         player.y = rocks[i].y - rocks[i].h/2 - player.h/2;
                     }
             }
@@ -309,7 +309,7 @@ $(function(){
                         }
                     }
                     if(uncontrolledPlayers.hasOwnProperty(snapKey)){
-                        if(dataSnapshot.val().state==2){
+                        if(dataSnapshot.val().state==1){
                             delete uncontrolledPlayers[snapKey];
                             enemies[snapKey]=new Enemy(dataSnapshot.val().x_val, dataSnapshot.val().y_val, dataSnapshot.val().w, dataSnapshot.val().h);
                             enemies[snapKey].state=dataSnapshot.val().state;
@@ -325,9 +325,9 @@ $(function(){
                 }
             });
             rootRef.on('child_added', function(dataSnapshot) {
+                var snapKey=dataSnapshot.key();
                 if(snapKey!=userID){
                     var snapKey=dataSnapshot.key();
-                    console.log(dataSnapshot.val().state);
                     if(dataSnapshot.val().state==2){
                         enemies[snapKey]=new Enemy(dataSnapshot.val().x_val, dataSnapshot.val().y_val, dataSnapshot.val().w, dataSnapshot.val().h);
                         enemies[snapKey].state=dataSnapshot.val().state;
@@ -340,6 +340,14 @@ $(function(){
                     }
                 }
                 
+            });
+            // Get the data on a post that has been removed
+            rootRef.on("child_removed", function(snapshot) {
+                if(snapshot.val().state==2)
+                    delete uncontrolledPlayers[snapshot.key()];
+                else
+                    delete uncontrolledPlayers[snapshot.key()];
+              
             });
             // Retrieve new posts as they are added to Firebase
             /*ref.on("child_added", function(snapshot) {
