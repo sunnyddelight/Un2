@@ -57,7 +57,7 @@ function Player(x, y, w, h)
     this.w = w;
     this.h = h;
     //true = civilian, false = soldier
-    this.state = 1;
+    this.state = 2;
     this.frame =0;
     this.points = 0;
 }
