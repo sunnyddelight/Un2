@@ -2,14 +2,16 @@ var canvas, ctx;
 var pressedKeys = [];
 var backgroundImg;
 var player=null;
-var enemies = [];
+var enemies = {};
 var stepSize= 7;
-var uncontrolledPlayers = [];
+var uncontrolledPlayers = {};
 var globalX, globalY;
 var time=0;
 var playerImg, soldierImg, citizenImg;
 var rootRef;
+var userID;
 var playerX, playerY;
+var fireSet=true;
 
 //pass top left as (x, y)
 function CheckCollision(x1, y1, w1, h1, x2, y2, w2, h2)
@@ -39,7 +41,7 @@ function Player(x, y, w, h)
     this.w = w;
     this.h = h;
     //true = civilian, false = soldier
-    this.state = true;
+    this.state = 1;
     this.frame =0;
     this.points = 0;
 }
@@ -54,33 +56,26 @@ Player.prototype.Draw = function()
         curFrame=this.frame+1; 
     } 
     ctx.drawImage(playerImg, this.w*curFrame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
-    console.log(playerImg.src," ",this.x, " ", this.y);
 }
 
 Player.prototype.CheckCollisions = function()
 {
-    if(this.state)
+    if(this.state==1)
     {
-        if(enemies.length > 0)
-        {
-           for(var ekey in enemies)
-           {
-               if(enemies[ekey] != undefined)
-               {
-                   if(CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h,
-                       enemies[ekey].x - enemies[ekey].w/2, enemies[ekey].y - enemies[ekey].h/2,
-                       enemies[ekey].w, enemies[ekey].h))
-                       {
-                            playerX=this.x;
-                            playerY=this.y;
-                            playerImg.src='images/soldier1mainsprite.png'
-                            citizenImg.src='images/userghostsprite.png'
-                            enemyImg.src='images/soldier1ghostsprite.png'
-                            this.state = false;
-                       }
-                   
-               }
-           }
+        for (ekey in enemies) {
+            if (enemies.hasOwnProperty(ekey)){
+                if(CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h,
+                    enemies[ekey].x - enemies[ekey].w/2, enemies[ekey].y - enemies[ekey].h/2,
+                    enemies[ekey].w, enemies[ekey].h))
+                {
+                    playerX=this.x;
+                    playerY=this.y;
+                    playerImg.src='images/soldier1mainsprite.png'
+                    citizenImg.src='images/userghostsprite.png'
+                    enemyImg.src='images/soldier1ghostsprite.png'
+                    this.state = 2;
+                }   
+            }
         }
     }
     else
@@ -106,13 +101,19 @@ function UncontrolledPlayer(x, y, w, h)
     this.w = w;
     this.h = h;
     this.frame = 0;
+    this.points=0;
 }
 
 UncontrolledPlayer.prototype.Draw = function()
 {
-    if(CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h, globalX, globalY, canvas.width,
-        canvas.height))
-        ctx.drawImage(citizenImg, this.w*this.frame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY);
+   var curFrame;
+    if(Math.floor(time/10)%2){
+        curFrame=this.frame;
+    }
+    else{
+        curFrame=this.frame+1; 
+    } 
+    ctx.drawImage(citizenImg, this.w*curFrame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
 }
 
 function Enemy(x, y, w, h)
@@ -122,6 +123,8 @@ function Enemy(x, y, w, h)
     this.y = y;
     this.w = w;
     this.h = h;
+    this.frame=0;
+    this.points=0;
 }
 Enemy.prototype.Draw = function()
 {
@@ -134,16 +137,24 @@ Enemy.prototype.Draw = function()
 function drawScene(){
     //console.log("(",player.x,",",player.y,")");
     time++;
-    updateScene();
+    rootRef.child(userID).set({"x_val":player.x,"y_val":player.y,"state":player.state, "points":player.points, "w":player.w,"h":player.h});
     processPressedKeys();
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.drawImage(backgroundImg, globalX, globalY, ctx.canvas.width, ctx.canvas.width, 0, 0, 700, 700);
+    //ctx.drawImage(backgroundImg, globalX, globalY, ctx.canvas.width, ctx.canvas.width, 0, 0, 700, 700);
+    for(i = 0; i <= canvas.width / backgroundImg.width; i++)
+    {
+        for(j = 0; j <= canvas.height / backgroundImg.height; j++)
+            ctx.drawImage(backgroundImg, i * backgroundImg.width, j*backgroundImg.height);
+    }
     player.Draw();
-    if (enemies.length > 0) {
-        for (var ekey in enemies) {
-            if (enemies[ekey] != undefined) {
-                enemies[ekey].Draw();
-            }
+    for (var ekey in enemies) {
+        if (enemies.hasOwnProperty(ekey)) {
+            enemies[ekey].Draw();
+        }
+    }
+    for (var ekey in uncontrolledPlayers) {
+        if (uncontrolledPlayers.hasOwnProperty(ekey)) {
+            uncontrolledPlayers[ekey].Draw();
         }
     }
     /*if (uncontrolledPlayers.length > 0) {
@@ -157,11 +168,6 @@ function drawScene(){
     
 }
 
-function updateScene(){
-    // update enemies and uncontrolled players status
-    
-    // send current location data to server
-}
 
 function processPressedKeys() {
     if (pressedKeys[37] != undefined) { // 'Left' key
@@ -192,6 +198,10 @@ function processPressedKeys() {
             globalY += stepSize;
         }
     }
+    else if (pressedKeys[13]){
+        rootRef.child(userID).set(null);
+        window.close();
+    }
 }
 
 $(function(){
@@ -199,7 +209,7 @@ $(function(){
     ctx = canvas.getContext('2d');
     
     backgroundImg=new Image();
-    backgroundImg.src = 'images/levelmap.jpg';
+    backgroundImg.src = 'images/dirt.png';
     backgroundImg.onload=function(){}
     globalX = 0;
     globalY = 0;
@@ -211,6 +221,68 @@ $(function(){
 
     playerImg.onload=function(){
         player=new Player(playerX,playerY, playerImg.width/8, playerImg.height);
+        if(fireSet){
+            var tempRef=rootRef.push({"x_val":player.x,"y_val":player.y,"state":player.state, "points":player.points, "w": player.w,"h":player.h });
+            userID=tempRef.key();
+            rootRef.on('child_changed', function(dataSnapshot) {
+
+                var snapKey=dataSnapshot.key();
+                if(snapKey!=userID){
+                    console.log(enemies);
+                    if(enemies.hasOwnProperty(snapKey)){
+                        if(dataSnapshot.val().state==2){
+                            delete enemies[snapKey];
+                            uncontrolledPlayers[snapKey]=new UncontrolledPlayer(dataSnapshot.val().x_val, dataSnapshot.val().y_val, dataSnapshot.val().w, dataSnapshot.val().h);
+                            uncontrolledPlayers[snapKey].state=dataSnapshot.val().state;
+                            uncontrolledPlayers[snapKey].points=dataSnapshot.val().points;
+                        }
+                        else{
+                            enemies[snapKey].x=dataSnapshot.val().x_val;
+                            enemies[snapKey].y=dataSnapshot.val().y_val;
+                            enemies[snapKey].state=dataSnapshot.val().state;
+                            enemies[snapKey].state=dataSnapshot.val().points;
+                        }
+                    }
+                    if(uncontrolledPlayers.hasOwnProperty(snapKey)){
+                        if(dataSnapshot.val().state==2){
+                            delete uncontrolledPlayers[snapKey];
+                            enemies[snapKey]=new Enemy(dataSnapshot.val().x_val, dataSnapshot.val().y_val, dataSnapshot.val().w, dataSnapshot.val().h);
+                            enemies[snapKey].state=dataSnapshot.val().state;
+                            enemies[snapKey].points=dataSnapshot.val().points;
+                        }
+                        else{
+                            uncontrolledPlayers[snapKey].x=dataSnapshot.val().x_val;
+                            uncontrolledPlayers[snapKey].y=dataSnapshot.val().y_val;
+                            uncontrolledPlayers[snapKey].state=dataSnapshot.val().state;
+                            uncontrolledPlayers[snapKey].state=dataSnapshot.val().points;
+                        }
+                    }
+                }
+            });
+            rootRef.on('child_added', function(dataSnapshot) {
+                
+                var snapKey=dataSnapshot.key();
+                console.log(dataSnapshot.val().state);
+                if(dataSnapshot.val().state==2){
+                    enemies[snapKey]=new Enemy(dataSnapshot.val().x_val, dataSnapshot.val().y_val, dataSnapshot.val().w, dataSnapshot.val().h);
+                    enemies[snapKey].state=dataSnapshot.val().state;
+                    enemies[snapKey].points=dataSnapshot.val().points;
+                }
+                else if(dataSnapshot.val().state==1){
+                    uncontrolledPlayers[snapKey]=new UncontrolledPlayer(dataSnapshot.val().x_val, dataSnapshot.val().y_val, dataSnapshot.val().w, dataSnapshot.val().h);
+                    uncontrolledPlayers[snapKey].state=dataSnapshot.val().state;
+                    uncontrolledPlayers[snapKey].points=dataSnapshot.val().points;
+                }
+                
+            });
+            // Retrieve new posts as they are added to Firebase
+            /*ref.on("child_added", function(snapshot) {
+            var newPost = snapshot.val();
+            console.log("Author: " + newPost.author);
+            console.log("Title: " + newPost.title);
+            });*/
+            fireSet=false;
+        }
     }
     
     
@@ -236,6 +308,7 @@ $(function(){
         }
     });
     rootRef = new Firebase('https://escape-from-the-un.firebaseio.com');
+    
     setInterval(drawScene, 30);
 
 
