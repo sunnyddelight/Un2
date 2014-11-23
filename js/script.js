@@ -20,14 +20,14 @@ function CheckCollision(x1, y1, w1, h1, x2, y2, w2, h2)
     var top2 = y2;
     var bottom2 = y2 + h2;
     if(bottom1 <= top2)
-        return false;
+        return true;
     if(top1 >= bottom2)
-        return false;
+        return true;
     if(right1 <= left2)
-        return false;
+        return true;
     if(left1 >= right2)
-        return false;
-    return true;
+        return true;
+    return false;
 }
 function Player(x, y, w, h, image)
 {
