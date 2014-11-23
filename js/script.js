@@ -2,8 +2,6 @@ var canvas, ctx;
 var pressedKeys = [];
 var backgroundImg;
 var player=null;
-var playerWidth=100;
-var playerHeight=100;
 var enemies = [];
 var stepSize= 7;
 var uncontrolledPlayers = [];
@@ -125,7 +123,7 @@ globalY = 0;
     var playerImg= new Image();
     playerImg.src='images/enemy.png';
     playerImg.onload=function(){
-        player=new Player(canvas.width /2, canvas.height- playerHeight-10, playerWidth, playerHeight, playerImg);
+        player=new Player(canvas.width /2, canvas.height/2, playerImg.width, playerImg.height, playerImg);
     }
     
     $(window).keydown(function (evt){ // onkeydown event handle
