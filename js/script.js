@@ -108,7 +108,7 @@ function Enemy(x, y, w, h, image)
 Enemy.prototype.Draw = function()
 {
     
-    if(!CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h, globalX, globalY, canvas.width,
+    if(CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h, globalX, globalY, canvas.width,
         canvas.height))
         ctx.drawImage(this.image, this.x-this.w/2 - globalX, this.y - this.h/2 - globalY);
 }

@@ -20,14 +20,14 @@ function CheckCollision(x1, y1, w1, h1, x2, y2, w2, h2)
     var top2 = y2;
     var bottom2 = y2 + h2;
     if(bottom1 <= top2)
-        return true;
+        return false;
     if(top1 >= bottom2)
-        return true;
+        return false;
     if(right1 <= left2)
-        return true;
+        return false;
     if(left1 >= right2)
-        return true;
-    return false;
+        return false;
+    return true;
 }
 function Player(x, y, w, h, image)
 {
@@ -90,7 +90,7 @@ function UncontrolledPlayer(x, y, w, h, image)
 
 UncontrolledPlayer.prototype.Draw = function()
 {
-    if(!CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h, globalX, globalY, canvas.width,
+    if(CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h, globalX, globalY, canvas.width,
         canvas.height))
         ctx.drawImage(this.image, this.w*this.frame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY);
 }
@@ -211,3 +211,4 @@ $(function(){
 
 
 });
+
