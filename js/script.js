@@ -6,6 +6,7 @@ var enemies = [];
 var stepSize= 7;
 var uncontrolledPlayers = [];
 var globalX, globalY;
+var time=0;
 
 //pass top left as (x, y)
 function CheckCollision(x1, y1, w1, h1, x2, y2, w2, h2)
@@ -42,7 +43,15 @@ function Player(x, y, w, h, image)
 Player.prototype.Draw = function()
 {
 //ctx.drawImage(this.image,this.x - this.w/2 - globalX, this.y - this.h/2 - globalY);
-    ctx.drawImage(this.image, this.w*this.frame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
+    var curFrame;
+    if(Math.floor(time/10)%2){
+        curFrame=this.frame;
+    }
+    else{
+        curFrame=this.frame+1; 
+    } 
+    ctx.drawImage(this.image, this.w*curFrame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
+    
 }
 
 Player.prototype.CheckCollisions = function()
@@ -105,6 +114,7 @@ Enemy.prototype.Draw = function()
 }
 
 function drawScene(){
+    time++;
     updateScene();
     processPressedKeys();
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -113,7 +123,7 @@ function drawScene(){
     if (enemies.length > 0) {
         for (var ekey in enemies) {
             if (enemies[ekey] != undefined) {
-                enemeis[ekey].Draw();
+                enemies[ekey].Draw();
             }
         }
     }
@@ -136,24 +146,28 @@ function updateScene(){
 function processPressedKeys() {
     if (pressedKeys[37] != undefined) { // 'Left' key
         if (player.x - player.w / 2 > 10) {
+            player.frame=2;
             player.x -= stepSize;
             globalX -= stepSize;
         }
     }
     else if (pressedKeys[38] != undefined) { // 'Up' key
         if (player.y - player.h / 2 > 10) {
+            player.frame=6;
             player.y -= stepSize;
             globalY -= stepSize;
         }
     }
     else if (pressedKeys[39] != undefined) { // 'Right' key
         if (player.x + player.w / 2 < canvas.width - 10) {
+            player.frame=4;
             player.x += stepSize;
             globalX += stepSize;
         }
     }
      else if (pressedKeys[40] != undefined) { // 'Down' key
         if (player.y + player.h / 2 < canvas.height - 10) {
+            player.frame=0;
             player.y += stepSize;
             globalY += stepSize;
         }
