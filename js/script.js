@@ -3,7 +3,7 @@ var pressedKeys = [];
 var backgroundImg;
 var player=null;
 var enemies = {};
-var stepSize= 8;
+var stepSize= 7;
 var uncontrolledPlayers = {};
 var globalX, globalY;
 var time=0;
@@ -130,7 +130,7 @@ UncontrolledPlayer.prototype.Draw = function()
         else{
             curFrame=this.frame+1; 
         } 
-        ctx.drawImage(citizenImg, this.w*curFrame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
+        ctx.drawImage(citizenImg, this.w*curFrame/2, 0, this.w/2, this.h/2, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
 }   }
 
 function Enemy(x, y, w, h)
@@ -155,7 +155,7 @@ Enemy.prototype.Draw = function()
         else{
             curFrame=this.frame+1; 
         } 
-        ctx.drawImage(enemyImg, this.w*curFrame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
+        ctx.drawImage(enemyImg, this.w*curFrame/2, 0, this.w/2, this.h/2, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
     }
 }
 
@@ -364,42 +364,21 @@ $(function(){
     rockImg.src = 'images/rock.png';
     rockImg.onload = function()
     {
-            rocks[0] = new Rock(983, 97, rockImg.width, rockImg.height);
-            rocks[1] = new Rock(504, 691, rockImg.width, rockImg.height);
-            rocks[2] = new Rock(727, 616, rockImg.width, rockImg.height);
-            rocks[3] = new Rock(186, 929, rockImg.width, rockImg.height);
-            rocks[4] = new Rock(996, 577, rockImg.width, rockImg.height);
-            rocks[5] = new Rock(945, 864, rockImg.width, rockImg.height);
-            rocks[6] = new Rock(575, 303, rockImg.width, rockImg.height);
-            rocks[7] = new Rock(419, 403, rockImg.width, rockImg.height);
-            rocks[8] = new Rock(666, 561, rockImg.width, rockImg.height);
-            rocks[9] = new Rock(591, 17, rockImg.width, rockImg.height);
-            rocks[10] = new Rock(985, 382, rockImg.width, rockImg.height);
-            rocks[11] = new Rock(553, 602, rockImg.width, rockImg.height);
-            rocks[12] = new Rock(719, 38, rockImg.width, rockImg.height);
-            rocks[13] = new Rock(46, 640, rockImg.width, rockImg.height);
-            rocks[14] = new Rock(457, 230, rockImg.width, rockImg.height);
-            rocks[15] = new Rock(327, 573, rockImg.width, rockImg.height);
-            rocks[16] = new Rock(241, 416, rockImg.width, rockImg.height);
-            rocks[17] = new Rock(8, 832, rockImg.width, rockImg.height);
-            rocks[18] = new Rock(737, 968, rockImg.width, rockImg.height);
-            rocks[19] = new Rock(522, 194, rockImg.width, rockImg.height);
-            rocks[20] = new Rock(35, 709, rockImg.width, rockImg.height);
-            rocks[21] = new Rock(1012, 443, rockImg.width, rockImg.height);
-            rocks[22] = new Rock(846, 610, rockImg.width, rockImg.height);
-            rocks[23] = new Rock(147, 407, rockImg.width, rockImg.height);
-            rocks[24] = new Rock(424, 488, rockImg.width, rockImg.height);
-            rocks[25] = new Rock(871, 738, rockImg.width, rockImg.height);
-            rocks[26] = new Rock(316, 385, rockImg.width, rockImg.height);
-            rocks[27] = new Rock(423, 400, rockImg.width, rockImg.height);
-            rocks[28] = new Rock(16, 11, rockImg.width, rockImg.height);
-            rocks[29] = new Rock(242, 469, rockImg.width, rockImg.height);
-            rocks[30] = new Rock(19, 473, rockImg.width, rockImg.height);
-            rocks[31] = new Rock(890, 569, rockImg.width, rockImg.height);
-            rocks[32] = new Rock(377, 260, rockImg.width, rockImg.height);
-            rocks[33] = new Rock(204, 898, rockImg.width, rockImg.height);
-            rocks[34] = new Rock(69, 90, rockImg.width, rockImg.height);
-
+            rocks[0] = new Rock(730, 32, rockImg.width, rockImg.height);
+            rocks[1] = new Rock(574, 624, rockImg.width, rockImg.height);
+            rocks[2] = new Rock(763, 521, rockImg.width, rockImg.height);
+            rocks[3] = new Rock(500, 975, rockImg.width, rockImg.height);
+            rocks[4] = new Rock(916, 218, rockImg.width, rockImg.height);
+            rocks[5] = new Rock(296, 560, rockImg.width, rockImg.height);
+            rocks[6] = new Rock(868, 166, rockImg.width, rockImg.height);
+            rocks[7] = new Rock(207, 20, rockImg.width, rockImg.height);
+            rocks[8] = new Rock(873, 657, rockImg.width, rockImg.height);
+            rocks[9] = new Rock(373, 178, rockImg.width, rockImg.height);
+            rocks[10] = new Rock(618, 400, rockImg.width, rockImg.height);
+            rocks[11] = new Rock(156, 718, rockImg.width, rockImg.height);
+            rocks[12] = new Rock(36, 75, rockImg.width, rockImg.height);
+            rocks[13] = new Rock(451, 966, rockImg.width, rockImg.height);
+            rocks[14] = new Rock(21, 86, rockImg.width, rockImg.height);
 
     }
     enemies[0]=new Enemy(40, 50, 70,70);   
