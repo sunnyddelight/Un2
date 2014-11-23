@@ -35,8 +35,8 @@ header a, a:visited {
 }
 #scene {
     display: block;
-    height: 600px;
+    height: 800px;
     margin: 10px auto;
     position: relative;
-    width: 800px;
+    width: 600px;
 }

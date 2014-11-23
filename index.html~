@@ -22,7 +22,7 @@
         </header>
 
         <div class="container">
-            <canvas id="scene" width="800" height="600" tabindex="1"></canvas>
+            <canvas style="height:800px; width:600px;" id="scene" width="800" height="600" tabindex="1"></canvas>
         </div>
     </body>
 </html>

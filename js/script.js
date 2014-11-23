@@ -11,6 +11,7 @@ var playerImg, soldierImg, citizenImg;
 var rootRef;
 var userID;
 var playerX, playerY;
+var mapW, mapH;
 var fireSet=true;
 
 //pass top left as (x, y)
@@ -106,15 +107,17 @@ function UncontrolledPlayer(x, y, w, h)
 
 UncontrolledPlayer.prototype.Draw = function()
 {
-   var curFrame;
-    if(Math.floor(time/10)%2){
-        curFrame=this.frame;
-    }
-    else{
-        curFrame=this.frame+1; 
-    } 
-    ctx.drawImage(citizenImg, this.w*curFrame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
-}
+    if(CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h, globalX, globalY, canvas.width,
+        canvas.height)){
+        var curFrame;
+        if(Math.floor(time/10)%2){
+            curFrame=this.frame;
+        }
+        else{
+            curFrame=this.frame+1; 
+        } 
+        ctx.drawImage(citizenImg, this.w*curFrame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
+}   }
 
 function Enemy(x, y, w, h)
 {
@@ -130,8 +133,16 @@ Enemy.prototype.Draw = function()
 {
     
     if(CheckCollision(this.x - this.w/2, this.y - this.h/2, this.w, this.h, globalX, globalY, canvas.width,
-        canvas.height))
-        ctx.drawImage(enemyImg, this.x-this.w/2 - globalX, this.y - this.h/2 - globalY);
+        canvas.height)){
+        var curFrame;
+        if(Math.floor(time/10)%2){
+            curFrame=this.frame;
+        }
+        else{
+            curFrame=this.frame+1; 
+        } 
+        ctx.drawImage(enemyImg, this.w*curFrame, 0, this.w, this.h, this.x - this.w/2 - globalX, this.y - this.h/2 - globalY,32,32);
+    }
 }
 
 function drawScene(){
@@ -171,33 +182,47 @@ function drawScene(){
 
 function processPressedKeys() {
     if (pressedKeys[37] != undefined) { // 'Left' key
-        if (player.x - player.w / 2 > 10) {
             player.frame=2;
             player.x -= stepSize;
             globalX -= stepSize;
-        }
+            if(player.x - player.w /2 < 0)
+                player.x = player.w/2;
+            
     }
     else if (pressedKeys[38] != undefined) { // 'Up' key
-        if (player.y - player.h / 2 > 10) {
             player.frame=6;
             player.y -= stepSize;
             globalY -= stepSize;
-        }
+            if(player.y - player.h/2 < 0)
+                player.y = player.h/2;
+            
     }
     else if (pressedKeys[39] != undefined) { // 'Right' key
-        if (player.x + player.w / 2 < canvas.width - 10) {
             player.frame=4;
             player.x += stepSize;
             globalX += stepSize;
-        }
+            if(player.x + player.w > mapW)
+                player.x = mapW - player.w;
+            
     }
     else if (pressedKeys[40] != undefined) { // 'Down' key
-        if (player.y + player.h / 2 < canvas.height - 10) {
             player.frame=0;
             player.y += stepSize;
             globalY += stepSize;
-        }
+            if(player.y + player.h > mapH)
+                player.y = mapH - player.h;
+            
     }
+    globalX = player.x - canvas.width/2;
+    globalY = player.y - canvas.height/2;
+    if(globalX < 0)
+         globalX = 0;
+    if(globalY < 0)
+                globalY = 0;
+    if(globalX + canvas.width > mapW)
+                globalX = mapW - canvas.width;
+    if(globalY + canvas.height > mapH)
+                globalY = mapH - canvas.height;
     else if (pressedKeys[13]){
         rootRef.child(userID).set(null);
         window.close();
@@ -213,7 +238,8 @@ $(function(){
     backgroundImg.onload=function(){}
     globalX = 0;
     globalY = 0;
-    
+    mapW = 1024;
+    mapH = 1024;
     playerImg= new Image();
     playerImg.src='images/usermainsprite.png';
     playerX=canvas.width/2;
