@@ -263,10 +263,7 @@ function processPressedKeys() {
                 globalX = mapW - canvas.width;
     if(globalY + canvas.height > mapH)
                 globalY = mapH - canvas.height;
-    else if (pressedKeys[13]){
-        rootRef.child(userID).set(null);
-        window.close();
-    }
+    
 }
 
 $(function(){
@@ -359,6 +356,10 @@ $(function(){
         }
     }
     
+    $(window).unload(function(){
+        rootRef.child(userID).set(null);
+
+    });
     
     enemyImg=new Image();
     enemyImg.src= 'images/soldier1mainsprite.png';
